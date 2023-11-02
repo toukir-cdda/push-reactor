@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getToken, isSupported, getMessaging, onMessage, Messaging } from 'firebase/messaging';
 import { initializeApp } from 'firebase/app';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 // Type for Firebase Configuration
 type FirebaseConfig = {
@@ -61,45 +59,6 @@ const requestNotificationPermission = async () => {
     }
 };
 
-function ToastDisplay({ payload }: any) {
-    return (
-        <div
-            style={{
-                display: 'flex',
-                gap: '5px',
-                alignItems: 'center',
-                background: 'white',
-                color: 'gray'
-            }}
-        >
-            <img width={70} height={70} src={payload?.data?.icon} alt="" />
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    background: 'white',
-                    color: 'gray'
-                }}
-            >
-                <span
-                    style={{
-                        fontWeight: 'bold'
-                    }}
-                >
-                    {payload?.data?.title}
-                </span>
-                <span
-                    style={{
-                        lineHeight: '1.2'
-                    }}
-                >
-                    {payload?.data?.body}
-                </span>
-            </div>
-        </div>
-    );
-}
-
 export const GenerateFCMToken: React.FC<GenerateFCMTokenProps> = ({ firebaseConfig, vapidKey, inAppNotification = false, getDeviceToken }) => {
     getFirebaseConfig(firebaseConfig);
     const [hasPermission, setHasPermission] = useState(hasNotificationPermission());
@@ -138,7 +97,7 @@ export const GenerateFCMToken: React.FC<GenerateFCMTokenProps> = ({ firebaseConf
         // listen for in app notfication
         if (inAppNotification) {
             onMessage(messaging, (payload) => {
-                toast(<ToastDisplay payload={payload} />);
+                console.log('in app notification', payload);
             });
         }
 
@@ -171,9 +130,5 @@ export const GenerateFCMToken: React.FC<GenerateFCMTokenProps> = ({ firebaseConf
         }
     }, []);
 
-    return (
-        <>
-            <ToastContainer />
-        </>
-    );
+    return null;
 };
