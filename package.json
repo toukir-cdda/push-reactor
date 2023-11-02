@@ -1,6 +1,6 @@
 {
     "name": "push-reactor",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "\"push-reactor\" is a user-friendly npm package that simplifies the integration of Firebase Cloud Messaging (FCM) for push notifications in your web and mobile applications.",
     "main": "dist/cjs/index.js",
     "module": "dist/esm/index.js",

@@ -29,20 +29,20 @@ yarn add push-reactor
 
 ```
 import { GenerateFCMToken } from "push-reactor";
+```
 
-
+```render-babel
      <GenerateFCMToken
         firebaseConfig={firebaseConfig}
         vapidKey={vapidKey}
-        inAppNotification={true}
+        inAppNotification={(payload: any) => console.log("in message", payload)}
         getDeviceToken={(data) => console.log(data)}
       />
 ```
 
-<p> Create "firebase-messageing-sw.js" file in /public folder in your project:</p>
+<p> Create "firebase-messaging-sw.js" file in /public folder in your project:</p>
 
 ```render-babel
-
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-undef
 importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js");
@@ -50,13 +50,13 @@ importScripts(
   "https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"
 );
 const firebaseConfig = {
-  apiKey: "AIzaSyBcBoJt64kLa-s0qty9CbnfKlyr16lmg1E",
-  authDomain: "push-notification-c53a1.firebaseapp.com",
-  projectId: "push-notification-c53a1",
-  storageBucket: "push-notification-c53a1.appspot.com",
-  messagingSenderId: "542544547876",
-  appId: "1:542544547876:web:5d7266f6216bbb3c14c8b1",
-  measurementId: "G-WSBW67005R",
+  apiKey: "<firebase-apiKey>"
+authDomain: "<firebase-authDomain>"
+projectId: "<firebase-projectId>"
+storageBucket: "<firebase-storageBucket>"
+messagingSenderId: "<firebase-messagingSenderId>"
+appId: "<firebase-appId>"
+measurementId: "<firebase-measurementId>"
 };
 // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
@@ -96,6 +96,4 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.showNotification(notification.title, notificationOptions);
 });
-
-
 ```
