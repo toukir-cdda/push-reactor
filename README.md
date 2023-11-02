@@ -25,38 +25,31 @@ npm install push-reactor
 yarn add push-reactor
 ```
 
-<p> Once the package is installed you can import the library using import or require approach:</p>
+<p> Once the package is installed you can import the library using import:</p>
 
-```
-import { GenerateFCMToken } from "push-reactor";
+```js
+import { GenerateFCMToken } from 'push-reactor';
 ```
 
-```render-babel
-     <GenerateFCMToken
-        firebaseConfig={firebaseConfig}
-        vapidKey={vapidKey}
-        inAppNotification={(payload: any) => console.log("in message", payload)}
-        getDeviceToken={(data) => console.log(data)}
-      />
+```jsx
+<GenerateFCMToken firebaseConfig={firebaseConfig} vapidKey={vapidKey} inAppNotification={(payload) => console.log('in message', payload)} getDeviceToken={(data) => console.log(data)} />
 ```
 
 <p> Create "firebase-messaging-sw.js" file in /public folder in your project:</p>
 
-```render-babel
+```js
 /* eslint-disable no-undef */
 // eslint-disable-next-line no-undef
-importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js");
-importScripts(
-  "https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"
-);
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js');
 const firebaseConfig = {
-  apiKey: "<firebase-apiKey>"
-authDomain: "<firebase-authDomain>"
-projectId: "<firebase-projectId>"
-storageBucket: "<firebase-storageBucket>"
-messagingSenderId: "<firebase-messagingSenderId>"
-appId: "<firebase-appId>"
-measurementId: "<firebase-measurementId>"
+    apiKey: '<firebase-apiKey>',
+    authDomain: '<firebase-authDomain>',
+    projectId: '<firebase-projectId>',
+    storageBucket: '<firebase-storageBucket>',
+    messagingSenderId: '<firebase-messagingSenderId>',
+    appId: '<firebase-appId>',
+    measurementId: '<firebase-measurementId>'
 };
 // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
@@ -64,36 +57,65 @@ firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // click on notification
-self.addEventListener("notificationclick", function (event) {
-  event.notification.close();
-  event.waitUntil(clients.openWindow(event.notification.data.url));
+self.addEventListener('notificationclick', function (event) {
+    event.notification.close();
+    if (event.notification.data.url) {
+        event.waitUntil(clients.openWindow(event.notification.data.url));
+    }
 });
 
 //set notification
 messaging.onBackgroundMessage((payload) => {
-  console.log(
-    "[firebase-messaging-sw.js] Received background message ",
-    payload
-  );
-  self.registration.update();
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    self.registration.update();
 
-  const notification = payload.data;
-  if (!notification) {
-    console.warn(
-      "[firebase-messaging-sw.js] Unknown notification on message ",
-      payload
-    );
-    return;
-  }
+    const notification = payload.data;
+    if (!notification) {
+        console.warn('[firebase-messaging-sw.js] Unknown notification on message ', payload);
+        return;
+    }
 
-  // Customize notification here
-  const notificationOptions = {
-    ...notification,
-    data: {
-      url: payload.data.openURL,
-    },
+    // Customize notification here
+    const notificationOptions = {
+        ...notification,
+        data: {
+            url: payload.data.openURL
+        }
+    };
+
+    self.registration.showNotification(notification.title, notificationOptions);
+});
+```
+
+<h2>🫴 Example:</h2>
+
+```jsx
+import { GenerateFCMToken } from "push-reactor";
+
+function App() {
+  const firebaseConfig = {
+    apiKey: "<firebase-apiKey>",
+    authDomain: "<firebase-authDomain>",
+    projectId: "<firebase-projectId>",
+    storageBucket: "<firebase-storageBucket>",
+    messagingSenderId: "<firebase-messagingSenderId>",
+    appId: "<firebase-appId>",
+    measurementId: "<firebase-measurementId>"
   };
 
-  self.registration.showNotification(notification.title, notificationOptions);
-});
+  const vapidKey =<firebase-token-vapidKey>;
+
+  return (
+    <>
+      <GenerateFCMToken
+        firebaseConfig={firebaseConfig}
+        vapidKey={vapidKey}
+        inAppNotification={(data) => console.log("in message", data)}
+        getDeviceToken={(data) => console.log(data)}
+      />
+    </>
+  );
+}
+
+export default App;
 ```
